@@ -10,26 +10,26 @@
     <li><a href="#1-contexte">1 Contexte</a></li>
     <li><a href="#2-règle-du-langage-python">2 Règle du langage Python</a>
       <ul>
-        <li><a href="#2.1-lint">2.1 Lint</a></li>
-        <li><a href="#2.2-importations">2.2 Importations</a></li>
-        <li><a href="#2.3-les-paquets">2.3 Les paquets</a></li>
-        <li><a href="#2.4-les-exceptions">2.4 Les exceptions</a></li>
-        <!-- <li><a href="#s2.5-global-variables">2.5 Mutable Global State</a></li> -->
-        <!-- <li><a href="#s2.6-nested">2.6 Nested/Local/Inner Classes and Functions</a></li> -->
-        <!-- <li><a href="#s2.7-comprehensions">2.7 Comprehensions &amp; Generator Expressions</a></li> -->
-        <!-- <li><a href="#s2.8-default-iterators-and-operators">2.8 Default Iterators and Operators</a></li> -->
-        <!-- <li><a href="#s2.9-generators">2.9 Generators</a></li> -->
-        <!-- <li><a href="#s2.10-lambda-functions">2.10 Lambda Functions</a></li> -->
-        <!-- <li><a href="#s2.11-conditional-expressions">2.11 Conditional Expressions</a></li> -->
-        <!-- <li><a href="#s2.12-default-argument-values">2.12 Default Argument Values</a></li> -->
-        <!-- <li><a href="#s2.13-properties">2.13 Properties</a></li> -->
-        <!-- <li><a href="#s2.14-truefalse-evaluations">2.14 True/False Evaluations</a></li> -->
-        <!-- <li><a href="#s2.16-lexical-scoping">2.16 Lexical Scoping</a></li> -->
-        <!-- <li><a href="#s2.17-function-and-method-decorators">2.17 Function and Method Decorators</a></li> -->
-        <!-- <li><a href="#s2.18-threading">2.18 Threading</a></li> -->
-        <!-- <li><a href="#s2.19-power-features">2.19 Power Features</a></li> -->
-        <!-- <li><a href="#s2.20-modern-python">2.20 Modern Python: from __future__ imports</a></li> -->
-        <!-- <li><a href="#s2.21-type-annotated-code">2.21 Type Annotated Code</a></li> -->
+        <li><a href="#21-lint">2.1 Lint</a></li>
+        <li><a href="#22-importations">2.2 Importations</a></li>
+        <li><a href="#23-les-paquets">2.3 Les paquets</a></li>
+        <li><a href="#24-les-exceptions">2.4 Les exceptions</a></li>
+        <!-- <li><a href="#25-global-variables">2.5 Mutable Global State</a></li> -->
+        <!-- <li><a href="#26-nested">2.6 Nested/Local/Inner Classes and Functions</a></li> -->
+        <!-- <li><a href="#27-comprehensions">2.7 Comprehensions &amp; Generator Expressions</a></li> -->
+        <!-- <li><a href="#28-default-iterators-and-operators">2.8 Default Iterators and Operators</a></li> -->
+        <!-- <li><a href="#29-generators">2.9 Generators</a></li> -->
+        <!-- <li><a href="#210-lambda-functions">2.10 Lambda Functions</a></li> -->
+        <!-- <li><a href="#211-conditional-expressions">2.11 Conditional Expressions</a></li> -->
+        <!-- <li><a href="#212-default-argument-values">2.12 Default Argument Values</a></li> -->
+        <!-- <li><a href="#213-properties">2.13 Properties</a></li> -->
+        <!-- <li><a href="#214-truefalse-evaluations">2.14 True/False Evaluations</a></li> -->
+        <!-- <li><a href="#216-lexical-scoping">2.16 Lexical Scoping</a></li> -->
+        <!-- <li><a href="#217-function-and-method-decorators">2.17 Function and Method Decorators</a></li> -->
+        <!-- <li><a href="#218-threading">2.18 Threading</a></li> -->
+        <!-- <li><a href="#219-power-features">2.19 Power Features</a></li> -->
+        <!-- <li><a href="#220-modern-python">2.20 Modern Python: from __future__ imports</a></li> -->
+        <!-- <li><a href="#221-type-annotated-code">2.21 Type Annotated Code</a></li> -->
       </ul>
     </li>
     <!--<li><a href="#s3-python-style-rules">3 Python Style Rules</a>
