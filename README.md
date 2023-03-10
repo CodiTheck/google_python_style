@@ -14,9 +14,9 @@
         <li><a href="#22-importations">2.2 Importations</a></li>
         <li><a href="#23-les-paquets">2.3 Les paquets</a></li>
         <li><a href="#24-les-exceptions">2.4 Les exceptions</a></li>
-        <!-- <li><a href="#25-global-variables">2.5 Mutable Global State</a></li> -->
-        <!-- <li><a href="#26-nested">2.6 Nested/Local/Inner Classes and Functions</a></li> -->
-        <!-- <li><a href="#27-comprehensions">2.7 Comprehensions &amp; Generator Expressions</a></li> -->
+        <li><a href="#25-etat-global-mutable">2.5 État global mutable</a></li>
+        <li><a href="#26-classes-et-fonctions-imbriquées-locales-intérieures">2.6 Classes et fonctions imbriquées/locales/intérieures</a></li>
+        <li><a href="#27-comprehensions-expressions-de-generator">2.7 Comprehensions &amp; Expressions de Generator</a></li>
         <!-- <li><a href="#28-default-iterators-and-operators">2.8 Default Iterators and Operators</a></li> -->
         <!-- <li><a href="#29-generators">2.9 Generators</a></li> -->
         <!-- <li><a href="#210-lambda-functions">2.10 Lambda Functions</a></li> -->
@@ -347,3 +347,112 @@ CODE PAS CORRECTE:
 4. Minimisez la quantité de code dans un bloc `try`/`except`. Plus le corps de `try` est important, plus il est probable qu'une exception soit soulevée par une ligne de code à laquelle vous ne vous attendiez pas. Dans ce cas, le bloc `try`/`except` cache une véritable erreur.
 
 5. Utilisez la clause `finally` pour exécuter le code, qu'une exception soit été levée ou non dans le bloc `try`. Cela est souvent utile pour le nettoyage, par exemple la fermeture d'un fichier.
+
+
+### 2.5 État global mutable
+Éviter les états globaux mutables.
+
+#### 2.5.1 Définition
+Valeurs au niveau du module ou attributs de classe qui peuvent être modifiés au cours de l'exécution du programme.
+
+#### 2.5.2 Avantage
+Occasionnellement utile.
+
+#### 2.5.3 Conséquence
+- Casse l'encapsulation : Une telle conception peut rendre difficile la réalisation d'objectifs valables. Par exemple, si l'état global est utilisé pour gérer la connexion à une base de données, il devient difficile de se connecter à deux bases de données différentes en même temps (par exemple pour calculer les différences lors d'une migration). Des problèmes similaires se posent facilement avec les registres globaux.
+
+- Peut modifier le comportement du module pendant l'importation, car les affectations aux variables globales sont effectuées lorsque le module est importé pour la première fois.
+
+#### 2.5.4 Décision
+Éviter les états globaux mutables.
+
+Dans les rares cas où l'utilisation d'un état global est justifiée, les entités globales mutables doivent être déclarées au niveau du module ou en tant qu'attribut de classe et rendues internes en ajoutant un `_` au nom. Si nécessaire, l'accès externe à l'état global mutable doit se faire par le biais de fonctions publiques ou de méthodes de classe. Voir la section ["Nommage"]() ci-dessous. Veuillez expliquer les raisons pour lesquelles l'état global mutable est utilisé dans un commentaire ou dans un document lié à un commentaire.
+
+Les constantes au niveau du module sont autorisées et encouragées. Par exemple : `_MAX_HOLY_HANDGRENADE_COUNT = 3` pour une constante d'utilisation interne ou `SIR_LANCELOTS_FAVORITE_COLOR = "blue"` pour une constante de l'API publique. Les constantes doivent être nommées en utilisant des majuscules et des traits de soulignement. Voir la section ["Nommage"]() ci-dessous.
+
+
+### 2.6 Classes et fonctions imbriquées/locales/intérieures
+Les fonctions ou classes locales imbriquées sont acceptables lorsqu'elles sont utilisées pour fermer une variable locale. Les classes internes sont acceptables.
+
+#### 2.6.1 Définition
+Une classe peut être définie à l'intérieur d'une méthode, d'une fonction ou d'une classe. Une fonction peut être définie à l'intérieur d'une méthode ou d'une fonction. Les fonctions imbriquées ont un accès en lecture seule aux variables définies dans les champs d'application qui les entourent.
+
+#### 2.6.2 Avantages
+Permet de définir des classes et des fonctions utilitaires qui ne sont utilisées que dans une portée très limitée. Couramment utilisé pour la mise en œuvre de décorateurs.
+
+#### 2.6.3 Conséquence
+Les fonctions et classes imbriquées ne peuvent pas être testées directement. L'imbrication peut rendre la fonction extérieure plus longue et moins lisible.
+
+#### 2.6.4 Décision
+Les fonctions imbriquées sont très bien avec quelques mises en garde. Éviter les fonctions ou classes imbriquées, sauf pour fermer une valeur locale autre que `self` ou `cls`. Ne pas imbriquer une fonction simplement pour la cacher aux utilisateurs d'un module. Au lieu de cela, préfixez son nom par un `_` au niveau du module afin qu'il soit toujours accessible par les tests.
+
+
+### 2.7 Comprehensions & Expressions de Generator
+C'est bon à utiliser pour des cas simples.
+
+#### 2.7.1 Définition
+Les compréhensions `list`, `dict` et `set` ainsi que les expressions génératrices constituent un moyen concis et efficace de créer des types de conteneurs et des itérateurs sans avoir recours aux boucles traditionnelles, aux `map()`, aux `filter()` ou aux `lambda`.
+
+#### 2.7.2 Avantages
+Les compréhensions simples peuvent être plus claires et plus simples que d'autres techniques de création de `dict`, de `list` ou `set`. Les expressions génératrices peuvent être très efficaces, puisqu'elles évitent la création d'une liste entièrement.
+
+#### 2.7.3 Conséquence
+Les compréhensions compliquées ou les expressions génératrices peuvent être **difficiles à lire**.
+
+#### 2.7.4 Décision
+Bon pour être utilisé pour des cas simples. Chaque portion doit tenir sur une ligne : *mapping expression*, clause `for`, expression `filter`. Les multiples clause `for` ou expression `filter` ne sont pas permits. Utilisez plutôt des boucles lorsque les choses deviennent plus compliquées.
+
+```python
+CODE CORRECT:
+  result = [mapping_expr for value in iterable if filter_expr]
+
+  result = [{'key': value} for value in iterable
+            if a_long_filter_expression(value)]
+
+  result = [complicated_transform(x)
+            for x in iterable if predicate(x)]
+
+  descriptive_name = [
+      transform({'key': key, 'value': value}, color='black')
+      for key, value in generate_iterable(some_input)
+      if complicated_condition_is_met(key, value)
+  ]
+
+  result = []
+  for x in range(10):
+      for y in range(5):
+          if x * y > 10:
+              result.append((x, y))
+
+  return {x: complicated_transform(x)
+          for x in long_generator_function(parameter)
+          if x is not None}
+
+  squares_generator = (x**2 for x in range(10))
+
+  unique_names = {user.name for user in users if user is not None}
+
+  eat(jelly_bean for jelly_bean in jelly_beans
+      if jelly_bean.color == 'black')
+
+```
+
+```python
+CODE PAS CORRECT:
+  result = [complicated_transform(
+                x, some_argument=x+1)
+            for x in iterable if predicate(x)]
+
+  result = [(x, y) for x in range(10) for y in range(5) if x * y > 10]
+
+  return ((x, y, z)
+          for x in range(5)
+          for y in range(5)
+          if x != y
+          for z in range(5)
+          if y != z)
+
+```
+
+
+
