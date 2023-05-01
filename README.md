@@ -17,8 +17,8 @@
         <li><a href="#25-etat-global-mutable">2.5 État global mutable</a></li>
         <li><a href="#26-classes-et-fonctions-imbriquées-locales-intérieures">2.6 Classes et fonctions imbriquées/locales/intérieures</a></li>
         <li><a href="#27-comprehensions-expressions-de-generator">2.7 Comprehensions &amp; Expressions de Generator</a></li>
-        <!-- <li><a href="#28-default-iterators-and-operators">2.8 Default Iterators and Operators</a></li> -->
-        <!-- <li><a href="#29-generators">2.9 Generators</a></li> -->
+        <li><a href="#28-itérateurs-et-opérateurs-par-défaut">2.8 Itérateurs et opérateurs par défaut</a></li>
+        <li><a href="#29-générateurs">2.9 Générateurs</a></li>
         <!-- <li><a href="#210-lambda-functions">2.10 Lambda Functions</a></li> -->
         <!-- <li><a href="#211-conditional-expressions">2.11 Conditional Expressions</a></li> -->
         <!-- <li><a href="#212-default-argument-values">2.12 Default Argument Values</a></li> -->
@@ -588,5 +588,84 @@ CODE PAS CORRECT:
 
 ```
 
+
+### 2.8 Itérateurs et opérateurs par défaut
+Utilisez des itérateurs et des opérateurs par défaut pour les types qui les
+prennent en charge, comme les listes, les dictionnaires et les fichiers.
+
+
+#### 2.8.1 Définition
+Les types de conteneurs, comme les dictionnaires et les listes, définissent
+des itérateurs par défaut et des opérateurs de test d'appartenance
+("in" et "not in").
+
+
+#### 2.8.2 Avantages
+Les itérateurs et opérateurs par défaut sont simples et efficaces.
+Ils expriment l'opération directement, sans appel de méthode supplémentaire.
+Une fonction qui utilise des opérateurs par défaut est générique.
+Elle peut être utilisée avec n'importe quel type prenant en charge l'opération.
+
+
+#### 2.8.3 Conséquences
+Il est impossible de connaître le type d'un objet en lisant le nom
+des méthodes (à moins que la variable ne comporte des annotations de type).
+Mais cela peut être également un avantage.
+
+
+#### 2.8.4 Solutions
+Utilise les itérateurs et les opérateurs par défaut pour les types qui
+les prennent en charge, comme les listes, les dictionnaires et les fichiers.
+Les types intégrés définissent également des méthodes d'itérateur. Il faut
+préférer ces méthodes à celles qui renvoient des listes, sauf que tu
+ne dois pas modifier un conteneur pendant que tu le parcour.
+
+```python
+# CODE CORRECTE:
+for key in adict: ...
+if obj in alist: ...
+for line in afile: ...
+for k, v in adict.items(): ...
+
+```
+
+```python
+# CODE PAS CORRECTE:
+for key in adict.keys(): ...
+for line in afile.readlines(): ...
+
+```
+
+
+### 2.9 Générateurs
+Utiliser des générateurs si nécessaire.
+
+#### 2.9.1 Définition
+Une fonction generator renvoie un itérateur qui produit une valeur chaque fois
+qu'il exécute une instruction `yield`. Après avoir produit une valeur, l'état
+d'exécution de la fonction generator est suspendu jusqu'à ce que la valeur
+suivante soit demandée.
+
+#### 2.9.2 Avantages
+Code plus simple, car l'état des variables locales et le flux de contrôle
+sont préservés à chaque appel. Un générateur utilise moins de mémoire
+qu'une fonction qui crée une liste entière de valeurs en une seule fois.
+
+#### 2.9.3 Conséquences
+Les variables locales du générateur ne seront pas libérées jusqu'à ce que le
+générateur soit consommé jusqu'à épuisement ou qu'il soit lui-même libéré de
+la mémoire.
+
+#### 2.9.4 Solutions
+1. Il est recommendé d'utilisez `"Yields :"` plutôt que `"Returns :"`
+dans la docstring des fonctions de type générateur.
+
+2. Si le générateur gère une ressource coûteuse, assure toi de forcer
+le nettoyage.
+
+3. Une bonne façon de faire le nettoyage est d'envelopper le générateur
+avec un gestionnaire de contexte [PEP-0533](https://peps.python.org/pep-0533/).
+
+<!-- https://google.github.io/styleguide/pyguide.html#210-lambda-functions -->
 
 
