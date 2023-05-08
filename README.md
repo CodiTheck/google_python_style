@@ -1,6 +1,6 @@
 # Guide de style Python de Google
 ![](https://img.shields.io/badge/contact-dr.mokira%40gmail.com-blueviolet)
-![](https://img.shields.io/badge/lastest-2023--05--01-success)
+![](https://img.shields.io/badge/lastest-2023--05--08-success)
 ![](https://img.shields.io/badge/status-en%20r%C3%A9daction%20-yellow)
 
 <details>
@@ -19,8 +19,8 @@
         <li><a href="#27-comprehensions-expressions-de-generator">2.7 Comprehensions &amp; Expressions de Generator</a></li>
         <li><a href="#28-itérateurs-et-opérateurs-par-défaut">2.8 Itérateurs et opérateurs par défaut</a></li>
         <li><a href="#29-générateurs">2.9 Générateurs</a></li>
-        <!-- <li><a href="#210-lambda-functions">2.10 Lambda Functions</a></li> -->
-        <!-- <li><a href="#211-conditional-expressions">2.11 Conditional Expressions</a></li> -->
+        <li><a href="#210-fonction-lambda">2.10 Fonction Lambda</a></li>
+        <li><a href="#211-expressions-conditionnelles">2.11 Expressions conditionnelles</a></li>
         <!-- <li><a href="#212-default-argument-values">2.12 Default Argument Values</a></li> -->
         <!-- <li><a href="#213-properties">2.13 Properties</a></li> -->
         <!-- <li><a href="#214-truefalse-evaluations">2.14 True/False Evaluations</a></li> -->
@@ -104,9 +104,9 @@
 
 </details>
 
-> Dans ce cour et tous les autres cours à venir, si le symbole `~$` se trouve
+<!-- > Dans ce cour et tous les autres cours à venir, si le symbole `~$` se trouve
 > au début d'un block de code, cela signifie qu'il s'agit de lignes de commande
-> qu'on peut exécuter dans un terminal.
+> qu'on peut exécuter dans un terminal.-->
 
 ## 1 Contexte
 Python est le principal langage dynamique utilisé chez Google. Ce guide de
@@ -147,6 +147,7 @@ Supprimez les avertissements s'ils sont inappropriés afin que d'autres
 problèmes ne soient pas cachés. Pour supprimer les avertissements, vous pouvez
 définir un commentaire au niveau de la ligne:
 
+###### `</> PYTHON [01]`
 ```python
 def do_PUT(self):  # WSGI name, so pylint: disable=invalid-name
   # ...
@@ -163,6 +164,7 @@ La suppression de cette manière a l'avantage que nous pouvons facilement
 rechercher les suppressions et les revoir. Tu peux obtenir une liste des
 avertissements de `pylint` en faisant :
 
+###### `>_ cmd@01:~$`
 ```sh
 # ~$
 pylint --list-msgs
@@ -170,6 +172,7 @@ pylint --list-msgs
 
 Pour obtenir plus d'informations sur un message particulier, utilise :
 
+###### `>_ cmd@02:~$`
 ```sh
 pylint --help-msg=invalid-name
 ```
@@ -182,6 +185,7 @@ en supprimant les variables au début de la fonction. Il faut  toujours inclure
 un commentaire expliquant pourquoi tu les supprime. "Unused." est suffisant.
 Par exemple :
 
+###### `</> PYTHON [02]`
 ```python
 def viking_cafe_order(spam: str, beans: str, eggs: str | None = None) -> str:
     del beans, eggs  # Unused by vikings.
@@ -196,6 +200,7 @@ D'autres formes courantes de suppression de cet avertissement consistent
 à utiliser '_' comme identifiant pour l'argument inutilisé ou à préfixer
 le nom de l'argument avec 'unused_', ou à les assigner à '_'. Par exemple :
 
+###### `</> PYTHON [03]`
 ```python
 def viking_cafe_order(
   spam: str,
@@ -245,6 +250,7 @@ dans le module actuel, ou si `y` est un nom trop long pour être utilisé.
 
 Par exemple, le module sound.effects.echo peut être importé comme suit :
 
+###### `</> PYTHON [04]`
 ```python
 from sound.effects import echo
 
@@ -290,24 +296,26 @@ ce n'est plus un problème.
 Tout nouveau code doit importer chaque module par son nom complet.
 Les importations doivent être comme suite :
 
+###### `</> PYTHON [05]`
 ```python
-CODE CORRECT:
-  # Faire référence à absl.flags dans le code avec le nom complet (verbose).
-  import absl.flags
-  from doctor.who import jodie
+# CODE CORRECT:
+# Faire référence à absl.flags dans le code avec le nom complet (verbose).
+import absl.flags
+from doctor.who import jodie
 
-  _FOO = absl.flags.DEFINE_string(...)
+_FOO = absl.flags.DEFINE_string(...)
 
 ```
 Ou, encore le code suivant:
 
+###### `</> PYTHON [06]`
 ```python
-CODE CORRECT:
-  # Référencer `flags` dans le code avec seulement le nom du module (commun).
-  from absl import flags
-  from doctor.who import jodie
+# CODE CORRECT:
+# Référencer `flags` dans le code avec seulement le nom du module (commun).
+from absl import flags
+from doctor.who import jodie
 
-  _FOO = flags.DEFINE_string(...)
+_FOO = flags.DEFINE_string(...)
 
 ```
 
@@ -315,12 +323,13 @@ CODE CORRECT:
   `jodie.py` se trouve également)*
 L'importation dans le code source suivant n'est pas correcte.
 
+###### `</> PYTHON [07]`
 ```python
-CODE PAS CORRECT:
-  # On ne sait pas exactement quel module l'auteur veut et ce qui sera importé.
-  # Le comportement réel de l'importation dépend de facteurs externes contrôlant
-  # sys.path. Quel module possible de jodie l'auteur voulait-il importer ?
-  import jodie
+# CODE PAS CORRECT:
+# On ne sait pas exactement quel module l'auteur veut et ce qui sera importé.
+# Le comportement réel de l'importation dépend de facteurs externes contrôlant
+# sys.path. Quel module possible de jodie l'auteur voulait-il importer ?
+import jodie
 
 ```
 
@@ -363,54 +372,56 @@ correction interne, et non pour imposer une utilisation correcte ou pour
 indiquer qu'un événement inattendu s'est produit. Si une exception est
 souhaitée dans ces derniers cas, utilisez une instruction raise. Par exemple :
 
+###### `</> PYTHON [08]`
 ```python
-CODE CORRECTE:
-  def connect_to_next_port(self, minimum: int) -> int:
-    """Connects to the next available port.
+# CODE CORRECTE:
+def connect_to_next_port(self, minimum: int) -> int:
+  """Connects to the next available port.
 
-    Args:
-      minimum: A port value greater or equal to 1024.
+  Args:
+    minimum: A port value greater or equal to 1024.
 
-    Returns:
-      The new minimum port.
+  Returns:
+    The new minimum port.
 
-    Raises:
-      ConnectionError: If no available port is found.
-    """
-    if minimum < 1024:
-      # Notez que cette levée de ValueError n'est pas mentionnée dans la 
-      # section "Raises :" de la doc
-      # dans la section "Raises :" de la doc car il n'est pas approprié de
-      # garantir cette réaction comportementale spécifique à une mauvaise
-      # utilisation de l'API.
-      raise ValueError(f'Min. port must be at least 1024, not {minimum}.')
+  Raises:
+    ConnectionError: If no available port is found.
+  """
+  if minimum < 1024:
+    # Notez que cette levée de ValueError n'est pas mentionnée dans la 
+    # section "Raises :" de la doc
+    # dans la section "Raises :" de la doc car il n'est pas approprié de
+    # garantir cette réaction comportementale spécifique à une mauvaise
+    # utilisation de l'API.
+    raise ValueError(f'Min. port must be at least 1024, not {minimum}.')
 
-    port = self._find_next_open_port(minimum)
-    if port is None:
-      raise ConnectionError(
-          f'Could not connect to service on port {minimum} or higher.')
+  port = self._find_next_open_port(minimum)
+  if port is None:
+    raise ConnectionError(
+        f'Could not connect to service on port {minimum} or higher.')
 
-    assert port >= minimum, (
-        f'Unexpected port {port} when minimum was {minimum}.')
-    return port
+  assert port >= minimum, (
+      f'Unexpected port {port} when minimum was {minimum}.')
+  return port
 
 ```
 
+###### `</> PYTHON [09]`
 ```python
-CODE PAS CORRECTE:
-  def connect_to_next_port(self, minimum: int) -> int:
-    """Connects to the next available port.
+# CODE PAS CORRECTE:
+def connect_to_next_port(self, minimum: int) -> int:
+  """Connects to the next available port.
 
-    Args:
-      minimum: A port value greater or equal to 1024.
+  Args:
+    minimum: A port value greater or equal to 1024.
 
-    Returns:
-      The new minimum port.
-    """
-    assert minimum >= 1024, 'Minimum port must be at least 1024.'
-    port = self._find_next_open_port(minimum)
-    assert port is not None
-    return port
+  Returns:
+    The new minimum port.
+  """
+  assert minimum >= 1024, 'Minimum port must be at least 1024.'
+  port = self._find_next_open_port(minimum)
+  assert port is not None
+  return port
 
 ```
 
@@ -536,41 +547,43 @@ sur une ligne : *mapping expression*, clause `for`, expression `filter`.
 Les multiples clause `for` ou expression `filter` ne sont pas permits.
 Utilisez plutôt des boucles lorsque les choses deviennent plus compliquées.
 
+###### `</> PYTHON [10]`
 ```python
-CODE CORRECT:
-  result = [mapping_expr for value in iterable if filter_expr]
+# CODE CORRECT:
+result = [mapping_expr for value in iterable if filter_expr]
 
-  result = [{'key': value} for value in iterable
-            if a_long_filter_expression(value)]
+result = [{'key': value} for value in iterable
+          if a_long_filter_expression(value)]
 
-  result = [complicated_transform(x)
-            for x in iterable if predicate(x)]
+result = [complicated_transform(x)
+          for x in iterable if predicate(x)]
 
-  descriptive_name = [
-      transform({'key': key, 'value': value}, color='black')
-      for key, value in generate_iterable(some_input)
-      if complicated_condition_is_met(key, value)
-  ]
+descriptive_name = [
+    transform({'key': key, 'value': value}, color='black')
+    for key, value in generate_iterable(some_input)
+    if complicated_condition_is_met(key, value)
+]
 
-  result = []
-  for x in range(10):
-      for y in range(5):
-          if x * y > 10:
-              result.append((x, y))
+result = []
+for x in range(10):
+    for y in range(5):
+        if x * y > 10:
+            result.append((x, y))
 
-  return {x: complicated_transform(x)
-          for x in long_generator_function(parameter)
-          if x is not None}
+return {x: complicated_transform(x)
+        for x in long_generator_function(parameter)
+        if x is not None}
 
-  squares_generator = (x**2 for x in range(10))
+squares_generator = (x**2 for x in range(10))
 
-  unique_names = {user.name for user in users if user is not None}
+unique_names = {user.name for user in users if user is not None}
 
-  eat(jelly_bean for jelly_bean in jelly_beans
-      if jelly_bean.color == 'black')
+eat(jelly_bean for jelly_bean in jelly_beans
+    if jelly_bean.color == 'black')
 
 ```
 
+###### `</> PYTHON [11]`
 ```python
 CODE PAS CORRECT:
   result = [complicated_transform(
@@ -620,6 +633,7 @@ Les types intégrés définissent également des méthodes d'itérateur. Il faut
 préférer ces méthodes à celles qui renvoient des listes, sauf que tu
 ne dois pas modifier un conteneur pendant que tu le parcour.
 
+###### `</> PYTHON [12]`
 ```python
 # CODE CORRECTE:
 for key in adict: ...
@@ -668,4 +682,77 @@ avec un gestionnaire de contexte [PEP-0533](https://peps.python.org/pep-0533/).
 
 <!-- https://google.github.io/styleguide/pyguide.html#210-lambda-functions -->
 
+
+### 2.10 Fonction Lambda
+Convient pour les expressions d'une ligne. Préférez les expressions
+génératrices avec un lambda que les fonction `map()` ou `filter()`.
+
+#### 2.10.1 Définition
+Les **lambdas expressions** définissent des fonctions anonymes dans une
+expression.
+
+#### 2.10.2 Avantages
+C'est très pratique.
+
+#### 2.10.3 Conséquences
+Elles sont plus difficiles à lire et à déboguer que les fonctions locales.
+L'expressivité est limitée car la fonction ne peut contenir qu'une seule
+expression ou instruction.
+
+#### 2.10.4 Décision
+Il est possible de les utiliser pour des définitions d'une ligne d'instruction.
+Si le code à l'intérieur de la fonction lambda est plus long que 60-80
+caractères, il est préférable de la définir comme une fonction normale.
+
+Pour les opérations courantes comme la multiplication, utilisez les fonctions
+du module operator au lieu des fonctions lambda. Par exemple, il faut
+préférer `operator.mul` à `lambda x, y : x * y`.
+
+
+### 2.11 Expressions conditionnelles
+C'est bon pour des cas de programmation simple.
+
+#### 2.11.1 Définition
+Les expressions conditionnelles (parfois appelées "opérateurs ternaires") sont
+des mécanismes qui fournissent une syntaxe plus courte pour les instructions
+`if`. Par exemple : `x = 1 if condition else 2`.
+
+#### 2.11.2 Avantages
+Plus court et plus pratique qu'une instruction `if` complet.
+
+#### 2.11.3 Conséquences
+La condition peut être difficile à localiser ou à percevoir si l'expression
+est longue.
+
+#### 2.11.4
+Utilisable pour les cas simples. Chaque partie doit tenir sur une ligne :
+expression_planA,if condition else expression_plan_B. Il faut utiliser une
+instruction `if` complète lorsque les choses deviennent plus complexe.
+
+###### `</> PYTHON [13]`
+```python
+# CODE CORRECTE:
+one_line = 'yes' if predicate(value) else 'no'
+slightly_split = ('yes' if predicate(value) else 'no, nein, nyet')
+the_longest_ternary_style_that_can_be_done = (
+        'yes, true, affirmative, confirmed, correct' if predicate(value)
+        else 'no, false, negative, nay'
+)
+
+```
+
+###### `</> PYTHON [14]`
+```python
+# CODE PAS CORRECT:
+bad_line_breaking = ('yes' if predicate(value) else 'no')
+portion_too_long = (
+  'yes' if some_long_module.some_long_predicate_function(
+    really_long_variable_name
+  )
+  else 'no, false, negative, nay'
+)
+
+```
+
+<!-- https://google.github.io/styleguide/pyguide.html#212-default-argument-values -->
 
